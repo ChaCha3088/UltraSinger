@@ -27,6 +27,8 @@ def export_transcribed_data_to_csv(transcribed_data: list[TranscribedData], file
 
 def write_lists_to_csv(times, frequencies, confidences, filename: str):
     """Write lists to csv"""
+    print("Write lists to csv")
+
     with open(filename, "w", encoding="utf-8", newline="") as csvfile:
         writer = csv.writer(csvfile)
         header = ["time", "frequency", "confidence"]

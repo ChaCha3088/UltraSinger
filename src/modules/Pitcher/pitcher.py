@@ -30,33 +30,44 @@ def get_pitch_with_crepe(
     times, frequencies, confidence, activation = crepe.predict(
         audio, sample_rate, model_capacity, step_size=step_size, viterbi=True
     )
+
     return PitchedData(times, frequencies, confidence)
 
-
+# 변경
 def get_pitched_data_with_high_confidence(
     pitched_data: PitchedData, threshold=0.4
 ) -> PitchedData:
     """Get frequency with high confidence"""
+
+    print("변경")
+
     new_pitched_data = PitchedData([], [], [])
-    for i, conf in enumerate(pitched_data.confidence):
-        if conf > threshold:
-            new_pitched_data.times.append(pitched_data.times[i])
+
+    for i, time in enumerate(pitched_data.times):
+        new_pitched_data.times.append(pitched_data.times[i])
+        new_pitched_data.confidence.append(pitched_data.confidence[i])
+
+        if pitched_data.confidence[i] > threshold and pitched_data.frequencies[i] <= 880:
             new_pitched_data.frequencies.append(pitched_data.frequencies[i])
-            new_pitched_data.confidence.append(pitched_data.confidence[i])
+        else:
+            new_pitched_data.frequencies.append(0)
 
     return new_pitched_data
 
-
+# 변경
 def get_frequencies_with_high_confidence(
     frequencies: list[float], confidences: list[float], threshold=0.4
 ) -> list[float]:
     """Get frequency with high confidence"""
+
     conf_f = []
     for i, conf in enumerate(confidences):
-        if conf > threshold:
+        if frequencies[i] <= 880 and conf > threshold:
             conf_f.append(frequencies[i])
+
     if not conf_f:
         conf_f = frequencies
+
     return conf_f
 
 

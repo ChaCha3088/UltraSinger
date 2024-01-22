@@ -58,6 +58,8 @@ from modules.Speech_Recognition.TranscribedData import TranscribedData
 from modules.plot import plot, plot_spectrogram
 from modules.musicbrainz_client import get_music_infos
 
+from modules.csv_handler import write_lists_to_csv
+
 settings = Settings()
 
 
@@ -99,9 +101,13 @@ def pitch_each_chunk_with_crepe(directory: str) -> list[str]:
             settings.crepe_step_size,
             settings.tensorflow_device,
         )
+
         conf_f = get_frequencies_with_high_confidence(
             pitched_data.frequencies, pitched_data.confidence
         )
+
+        # pitched_data와 conf_f에 들어있는 값을 csv로 출력한다.
+        write_lists_to_csv(pitched_data.times, conf_f, pitched_data.confidence, filepath.replace(".wav", ".csv"))
 
         notes = convert_frequencies_to_notes(conf_f)
         note = most_frequent(notes)[0][0]
@@ -420,7 +426,7 @@ def run() -> None:
 
     # Pitch the audio
     midi_notes, pitched_data, ultrastar_note_numbers = pitch_audio(
-        is_audio, transcribed_data, ultrastar_class
+        is_audio, transcribed_data, ultrastar_class, song_output, basename_without_ext
     )
 
     # Create plot
@@ -702,13 +708,17 @@ def infos_from_audio_input_file() -> tuple[str, str, str, tuple[str, str, str, s
     """Infos from audio input file"""
     basename = os.path.basename(settings.input_file_path)
     basename_without_ext = os.path.splitext(basename)[0]
+    print(f"basename is {basename}")
+    print(f"basename_without_ext is {basename_without_ext}")
 
     artist, title = None, None
-    if " - " in basename_without_ext:
-        artist, title = basename_without_ext.split(" - ", 1)
+    if "-" in basename_without_ext:
+        artist, title = basename_without_ext.split("-", 1)
         search_string = f"{artist} - {title}"
     else:
         search_string = basename_without_ext
+
+    print(search_string)
 
     # Get additional data for song
     (title_info, artist_info, year_info, genre_info) = get_music_infos(search_string)
@@ -818,18 +828,27 @@ def create_midi_file(real_bpm: float,
     )
 
 
-def pitch_audio(is_audio: bool, transcribed_data: list[TranscribedData], ultrastar_class: UltrastarTxtValue) -> tuple[
+def pitch_audio(is_audio: bool, transcribed_data: list[TranscribedData], ultrastar_class: UltrastarTxtValue, song_output, basename_without_ext) -> tuple[
     list[str], PitchedData, list[int]]:
     """Pitch audio"""
     # todo: chunk pitching as option?
     # midi_notes = pitch_each_chunk_with_crepe(chunk_folder_name)
     device = "cpu" if settings.force_crepe_cpu else settings.tensorflow_device
+
     pitched_data = get_pitch_with_crepe_file(
         settings.processing_audio_path,
         settings.crepe_model_capacity,
         settings.crepe_step_size,
         device,
     )
+
+    filepath = os.path.join(
+        song_output, basename_without_ext + "_pitch.csv"
+    )
+
+    # pitched_data에 들어있는 값을 csv로 출력한다.
+    write_lists_to_csv(pitched_data.times, pitched_data.frequencies, pitched_data.confidence, filepath)
+
     if is_audio:
         start_times = []
         end_times = []

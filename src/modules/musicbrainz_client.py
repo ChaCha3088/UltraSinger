@@ -9,7 +9,7 @@ def get_music_infos(search_string: str) -> tuple[str, str, str, str]:
 
     musicbrainzngs.set_useragent("UltraSinger", "0.1", "https://github.com/rakuri255/UltraSinger")
 
-    # search for artist and titel to get release on the first place
+    # search for artist and title to get release on the first place
     artists = musicbrainzngs.search_artists(search_string)
     artist = artists['artist-list'][0]['name']
     release_groups = musicbrainzngs.search_release_groups(search_string, artist=artist)
@@ -39,7 +39,7 @@ def get_music_infos(search_string: str) -> tuple[str, str, str, str]:
         print(f"{ULTRASINGER_HEAD} {red_highlighted('No match found')}")
         return None, None, None, None
 
-    print(f"{ULTRASINGER_HEAD} Found Titel and Artist {blue_highlighted(title)} by {blue_highlighted(artist)}")
+    print(f"{ULTRASINGER_HEAD} Found Title and Artist {blue_highlighted(title)} by {blue_highlighted(artist)}")
 
     year = None
     if 'first-release-date' in release:
