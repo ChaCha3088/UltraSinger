@@ -8,6 +8,7 @@ import re
 
 import Levenshtein
 import librosa
+from librosa import midi_to_note
 
 from tqdm import tqdm
 from packaging import version
@@ -46,7 +47,7 @@ from modules.Midi.midi_creator import (
 )
 from modules.Pitcher.pitcher import (
     get_frequencies_with_high_confidence,
-    get_pitch_with_crepe_file,
+    get_pitch_with_crepe_file, get_highest_note_with_high_confidence,
 )
 from modules.Pitcher.pitched_data import PitchedData
 from modules.Speech_Recognition.hyphenation import hyphenation, language_check, create_hyphenator
@@ -428,6 +429,21 @@ def run() -> None:
     midi_notes, pitched_data, ultrastar_note_numbers = pitch_audio(
         is_audio, transcribed_data, ultrastar_class, song_output, basename_without_ext
     )
+
+    # 변경
+    # 신뢰도가 threshold 이상인 노트들 중 최대음을 찾는다.
+    max_note = get_highest_note_with_high_confidence(pitched_data)
+    print(f"max_note: {max_note}")
+
+    # # 변경
+    # # midi_notes의 최대값을 note로 변환하여 출력한다.
+    # print(max(midi_notes))
+    #
+    # # 변경
+    # # ultrastar_note_numbers의 최대값을 note로 변환하여 출력한다.
+    # print(max(ultrastar_note_numbers) + 48)
+    # print(librosa.midi_to_note(max(ultrastar_note_numbers) + 48))
+
 
     # Create plot
     if settings.create_plot:
@@ -863,7 +879,9 @@ def pitch_audio(is_audio: bool, transcribed_data: list[TranscribedData], ultrast
         midi_notes = create_midi_notes_from_pitched_data(
             ultrastar_class.startTimes, ultrastar_class.endTimes, pitched_data
         )
+
     ultrastar_note_numbers = convert_midi_notes_to_ultrastar_notes(midi_notes)
+
     return midi_notes, pitched_data, ultrastar_note_numbers
 
 

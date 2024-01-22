@@ -1,6 +1,7 @@
 """Pitcher module"""
 
 import crepe
+import librosa
 from scipy.io import wavfile
 
 from modules.console_colors import ULTRASINGER_HEAD, blue_highlighted, red_highlighted
@@ -69,6 +70,24 @@ def get_frequencies_with_high_confidence(
         conf_f = frequencies
 
     return conf_f
+
+
+# 변경
+def get_highest_note_with_high_confidence(
+        pitched_data: PitchedData, threshold=0.4
+) -> str:
+    """Get highest note with high confidence"""
+
+    result = 0.0
+
+    for frequency, confidence in zip(pitched_data.frequencies, pitched_data.confidence):
+        if confidence > threshold and frequency <= 880:
+            result = frequency
+
+    ya = librosa.hz_to_note(result)
+
+    return "".join(ya)
+
 
 
 class Pitcher:
