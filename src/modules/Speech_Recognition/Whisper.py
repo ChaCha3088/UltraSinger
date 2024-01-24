@@ -56,6 +56,9 @@ def transcribe_with_whisper(
 
     audio = whisperx.load_audio(audio_path)
 
+    # audio의 반절 뒷부분만 취하고 싶다.
+    audio = audio[audio.shape[0]//2:]
+
     print(f"{ULTRASINGER_HEAD} Transcribing {audio_path}")
 
     result = loaded_whisper_model.transcribe(
