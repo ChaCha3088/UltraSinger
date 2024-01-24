@@ -24,7 +24,7 @@ class MySettings:
         self.whisper_model = "medium"  # Multilingual model tiny|base|small|medium|large-v1|large-v2
         # English-only model tiny.en|base.en|small.en|medium.en
         self.whisper_align_model = None   # Model for other languages from huggingface.co e.g -> "gigant/romanian-wav2vec2"
-        self.whisper_batch_size = 16   # reduce if low on GPU mem
+        self.whisper_batch_size = 8   # reduce if low on GPU mem
         self.whisper_compute_type = None   # change to "int8" if low on GPU mem (may reduce accuracy)
 
         # Pitch

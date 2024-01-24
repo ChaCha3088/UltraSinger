@@ -8,7 +8,7 @@ file_list = os.listdir("../youtubeFile")
 
 # 2. 파일명 리스트를 순회하면서
 for i, file in enumerate(file_list):
-    if i <= 15:
+    if i < 74:
         continue
 
     # 3. 파일명을 가지고 MySettings 객체를 생성한다.
