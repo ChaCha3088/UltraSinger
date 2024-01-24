@@ -10,13 +10,13 @@ from modules.Speech_Recognition.TranscribedData import TranscribedData
 
 
 def transcribe_with_whisper(
-    audio_path: str,
-    model: str,
-    device="cpu",
-    model_name: str = None,
-    batch_size: int = 16,
-    compute_type: str = None,
-    language: str = None,
+        audio_path: str,
+        model: str,
+        device="cpu",
+        model_name: str = None,
+        batch_size: int = 16,
+        compute_type: str = None,
+        language: str = None,
 ) -> (list[TranscribedData], str):
     """Transcribe with whisper"""
 
@@ -37,8 +37,8 @@ def transcribe_with_whisper(
         )
     except ValueError as value_error:
         if (
-            "Requested float16 compute type, but the target device or backend do not support efficient float16 computation."
-            in str(value_error.args[0])
+                "Requested float16 compute type, but the target device or backend do not support efficient float16 computation."
+                in str(value_error.args[0])
         ):
             print(value_error)
             print(
@@ -55,9 +55,6 @@ def transcribe_with_whisper(
         sys.exit(1)
 
     audio = whisperx.load_audio(audio_path)
-
-    # audio의 반절 뒷부분만 취하고 싶다.
-    audio = audio[audio.shape[0]//2:]
 
     print(f"{ULTRASINGER_HEAD} Transcribing {audio_path}")
 
@@ -104,15 +101,18 @@ def convert_to_transcribed_data(result_aligned):
         for obj in segment["words"]:
             vtd = TranscribedData(obj)  # create custom Word object
             vtd.word = vtd.word + " "  # add space to end of word
+
+            # 변경
             if len(obj) < 4:
-                previous = transcribed_data[-1]
-                if not previous:
-                    previous.end = 0
-                    previous.end = ""
-                vtd.start = previous.end + 0.1
-                vtd.end = previous.end + 0.2
-                msg = f'Error: There is no timestamp for word: "{obj["word"]}". ' \
-                      f'Fixing it by placing it after the previous word: "{previous.word}". At start: {vtd.start} end: {vtd.end}. Fix it manually!'
-                print(f"{red_highlighted(msg)}")
+                if len(transcribed_data) > 0:
+                    previous = transcribed_data[-1]
+                    if not previous:
+                        previous.end = 0
+                        previous.end = ""
+                    vtd.start = previous.end + 0.1
+                    vtd.end = previous.end + 0.2
+                    msg = f'Error: There is no timestamp for word: "{obj["word"]}". ' \
+                          f'Fixing it by placing it after the previous word: "{previous.word}". At start: {vtd.start} end: {vtd.end}. Fix it manually!'
+                    print(f"{red_highlighted(msg)}")
             transcribed_data.append(vtd)  # and add it to list
     return transcribed_data

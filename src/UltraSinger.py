@@ -66,7 +66,7 @@ class UltraSinger:
     def __init__(self, settings):
         self.settings = settings
 
-    def convert_midi_notes_to_ultrastar_notes(self, midi_notes: list[str]) -> list[int]:
+    def convert_midi_notes_to_ultrastar_notes(self, midi_notes: list[str]) -> tuple[list[int], int]:
         """Convert midi notes to ultrastar notes"""
         print(f"{ULTRASINGER_HEAD} Creating Ultrastar notes from midi data")
 
@@ -82,7 +82,7 @@ class UltraSinger:
             # print(
             #    f"Note: {midi_notes[i]} midi_note: {str(note_number_librosa)} pitch: {str(pitch)}"
             # )
-        return ultrastar_note_numbers
+        return ultrastar_note_numbers, max(ultrastar_note_numbers)
 
     def pitch_each_chunk_with_crepe(self, directory: str) -> list[str]:
         """Pitch each chunk with crepe and return midi notes"""
@@ -420,13 +420,13 @@ class UltraSinger:
             )
 
         # Pitch the audio
-        midi_notes, pitched_data, ultrastar_note_numbers = self.pitch_audio(
+        midi_notes, pitched_data, ultrastar_note_numbers, max_ultrastar_note = self.pitch_audio(
             is_audio, transcribed_data, ultrastar_class, song_output, basename_without_ext
         )
 
         # 변경
-        # 신뢰도가 threshold 이상인 노트들 중 최대음을 찾는다.
-        max_note = get_highest_note_with_high_confidence(pitched_data)
+        # ultrastar_note_numbers 중 최대음을 찾는다.
+        max_note = librosa.midi_to_note(max_ultrastar_note + 48)
         print(f"max_note: {max_note}")
 
         # max_note를 txt로 출력한다.
@@ -836,7 +836,7 @@ class UltraSinger:
 
     def pitch_audio(self, is_audio: bool, transcribed_data: list[TranscribedData], ultrastar_class: UltrastarTxtValue,
                     song_output, basename_without_ext) -> tuple[
-        list[str], PitchedData, list[int]]:
+        list[str], PitchedData, list[int], int]:
         """Pitch audio"""
         # todo: chunk pitching as option?
         # midi_notes = pitch_each_chunk_with_crepe(chunk_folder_name)
@@ -871,9 +871,9 @@ class UltraSinger:
                 ultrastar_class.startTimes, ultrastar_class.endTimes, pitched_data
             )
 
-        ultrastar_note_numbers = self.convert_midi_notes_to_ultrastar_notes(midi_notes)
+        ultrastar_note_numbers, max_ultrastart_note = self.convert_midi_notes_to_ultrastar_notes(midi_notes)
 
-        return midi_notes, pitched_data, ultrastar_note_numbers
+        return midi_notes, pitched_data, ultrastar_note_numbers, max_ultrastart_note
 
     def create_audio_chunks(
             self,
