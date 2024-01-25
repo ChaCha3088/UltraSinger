@@ -1,4 +1,4 @@
-class MySettings:
+class BatchSettings:
     def __init__(self, input_file_path="", output_file_path=""):
         self.APP_VERSION = "0.0.8"
 

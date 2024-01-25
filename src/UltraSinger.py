@@ -297,6 +297,178 @@ class UltraSinger:
             f"{ULTRASINGER_HEAD} {gold_highlighted('*****************************')}"
         )
 
+    def analyze(self) -> None:
+        """The processing function of this program"""
+        is_audio = ".txt" not in self.settings.input_file_path
+        ultrastar_class = None
+        real_bpm = None
+        (title, artist, year, genre) = (None, None, None, None)
+
+        if not is_audio:  # Parse Ultrastar txt
+            print(
+                f"{ULTRASINGER_HEAD} {gold_highlighted('re-pitch mode')}"
+            )
+            (
+                basename_without_ext,
+                real_bpm,
+                song_output,
+                ultrastar_audio_input_path,
+                ultrastar_class,
+            ) = self.parse_ultrastar_txt()
+        elif self.settings.input_file_path.startswith("https:"):  # Youtube
+            print(
+                f"{ULTRASINGER_HEAD} {gold_highlighted('full automatic mode')}"
+            )
+            (
+                basename_without_ext,
+                song_output,
+                ultrastar_audio_input_path,
+                (title, artist, year, genre)
+            ) = self.download_from_youtube()
+        else:  # Audio File
+            print(
+                f"{ULTRASINGER_HEAD} {gold_highlighted('full automatic mode')}"
+            )
+            (
+                basename_without_ext,
+                song_output,
+                ultrastar_audio_input_path,
+                (title, artist, year, genre)
+            ) = self.infos_from_audio_input_file()
+
+        cache_path = os.path.join(song_output, "cache")
+        self.settings.processing_audio_path = os.path.join(
+            cache_path, basename_without_ext + ".wav"
+        )
+        os_helper.create_folder(cache_path)
+
+        # Separate vocal from audio
+        audio_separation_path = self.separate_vocal_from_audio(
+            basename_without_ext, cache_path, ultrastar_audio_input_path
+        )
+        vocals_path = os.path.join(audio_separation_path, "vocals.wav")
+        instrumental_path = os.path.join(audio_separation_path, "no_vocals.wav")
+
+        # Move instrumental and vocals
+        if self.settings.create_karaoke and version.parse(self.settings.format_version) < version.parse("1.1.0"):
+            karaoke_output_path = os.path.join(song_output, basename_without_ext + " [Karaoke].mp3")
+            convert_wav_to_mp3(instrumental_path, karaoke_output_path)
+
+        if version.parse(self.settings.format_version) >= version.parse("1.1.0"):
+            instrumental_output_path = os.path.join(song_output, basename_without_ext + " [Instrumental].mp3")
+            convert_wav_to_mp3(instrumental_path, instrumental_output_path)
+            vocals_output_path = os.path.join(song_output, basename_without_ext + " [Vocals].mp3")
+            convert_wav_to_mp3(vocals_path, vocals_output_path)
+
+        if self.settings.use_separated_vocal:
+            input_path = vocals_path
+        else:
+            input_path = ultrastar_audio_input_path
+
+        # Denoise vocal audio
+        denoised_output_path = os.path.join(
+            cache_path, basename_without_ext + "_denoised.wav"
+        )
+        self.denoise_vocal_audio(input_path, denoised_output_path)
+
+        # Convert to mono audio
+        mono_output_path = os.path.join(
+            cache_path, basename_without_ext + "_mono.wav"
+        )
+        convert_audio_to_mono_wav(denoised_output_path, mono_output_path)
+
+        # Mute silence sections
+        mute_output_path = os.path.join(
+            cache_path, basename_without_ext + "_mute.wav"
+        )
+        self.mute_no_singing_parts(mono_output_path, mute_output_path)
+
+        # Define the audio file to process
+        self.settings.processing_audio_path = mute_output_path
+
+        # Audio transcription
+        transcribed_data = None
+        language = self.settings.language
+        if is_audio:
+            detected_language, transcribed_data = self.transcribe_audio()
+            if language is None:
+                language = detected_language
+
+            self.remove_unecessary_punctuations(transcribed_data)
+
+            if self.settings.hyphenation:
+                hyphen_words = self.hyphenate_each_word(language, transcribed_data)
+                if hyphen_words is not None:
+                    transcribed_data = self.add_hyphen_to_data(transcribed_data, hyphen_words)
+
+            transcribed_data = remove_silence_from_transcription_data(
+                self.settings.processing_audio_path, transcribed_data
+            )
+
+            # todo: do we need to correct words?
+            # lyric = 'input/faber_lyric.txt'
+            # --corrected_words = correct_words(vosk_speech, lyric)
+
+        # Create audio chunks
+        if self.settings.create_audio_chunks:
+            self.create_audio_chunks(
+                cache_path,
+                is_audio,
+                transcribed_data,
+                ultrastar_audio_input_path,
+                ultrastar_class,
+            )
+
+        # Pitch the audio
+        midi_notes, pitched_data, ultrastar_note_numbers, max_ultrastar_note = self.pitch_audio(
+            is_audio, transcribed_data, ultrastar_class, song_output, basename_without_ext
+        )
+
+        # 변경
+        # ultrastar_note_numbers 중 최대음을 찾는다.
+        # max_midi_note = max_ultrastar_note + 48
+        # print(f"max_midi_note: {max_midi_note}")
+        #
+        # # max_midi_note를 txt로 출력한다.
+        # with open(os.path.join(song_output, "max_note.txt"), "w", encoding=FILE_ENCODING) as f:
+        #     f.write(str(max_midi_note))
+
+        # Create plot
+        if self.settings.create_plot:
+            vocals_path = os.path.join(audio_separation_path, "vocals.wav")
+            plot_spectrogram(vocals_path, song_output, "vocals.wav")
+            plot_spectrogram(self.settings.processing_audio_path, song_output, "processing audio")
+            plot(pitched_data, song_output, transcribed_data, midi_notes)
+
+        # Write Ultrastar txt
+        if is_audio:
+            real_bpm, ultrastar_file_output = self.create_ultrastar_txt_from_automation(
+                basename_without_ext,
+                song_output,
+                transcribed_data,
+                ultrastar_audio_input_path,
+                ultrastar_note_numbers,
+                language,
+                title,
+                artist,
+                year,
+                genre
+            )
+        else:
+            ultrastar_file_output = self.create_ultrastar_txt_from_ultrastar_data(
+                song_output, ultrastar_class, ultrastar_note_numbers
+            )
+
+        # Calc Points
+        ultrastar_class, simple_score, accurate_score = self.calculate_score_points(
+            is_audio, pitched_data, ultrastar_class, ultrastar_file_output
+        )
+
+        # Add calculated score to Ultrastar txt #Todo: Missing Karaoke
+        ultrastar_writer.add_score_to_ultrastar_txt(
+            ultrastar_file_output, simple_score
+        )
+
     def run(self) -> None:
         """The processing function of this program"""
         is_audio = ".txt" not in self.settings.input_file_path
@@ -473,9 +645,6 @@ class UltraSinger:
         if self.settings.create_midi:
             self.create_midi_file(real_bpm, song_output, ultrastar_class, basename_without_ext)
 
-        # Print Support
-        self.print_support()
-
     def mute_no_singing_parts(self, mono_output_path, mute_output_path):
         print(
             f"{ULTRASINGER_HEAD} Mute audio parts with no singing"
@@ -546,7 +715,8 @@ class UltraSinger:
         return audio_separation_path
 
     def calculate_score_points(
-            self, is_audio: bool, pitched_data: PitchedData, ultrastar_class: UltrastarTxtValue, ultrastar_file_output: str
+            self, is_audio: bool, pitched_data: PitchedData, ultrastar_class: UltrastarTxtValue,
+            ultrastar_file_output: str
     ):
         """Calculate score points"""
         if is_audio:
@@ -733,11 +903,13 @@ class UltraSinger:
         #     basename = f"{basename_without_ext}{extension}"
 
         song_output = os.path.join(self.settings.output_file_path, basename_without_ext)
-        song_output = self.get_unused_song_output_dir(song_output)
+        # 변경
+        # song_output = self.get_unused_song_output_dir(song_output)
         os_helper.create_folder(song_output)
-        os_helper.copy(self.settings.input_file_path, song_output)
-        os_helper.rename(os.path.join(song_output, os.path.basename(self.settings.input_file_path)),
-                         os.path.join(song_output, basename))
+        # 변경
+        # os_helper.copy(self.settings.input_file_path, song_output)
+        # os_helper.rename(os.path.join(song_output, os.path.basename(self.settings.input_file_path)),
+        #                  os.path.join(song_output, basename))
         ultrastar_audio_input_path = os.path.join(song_output, basename)
         return basename_without_ext, song_output, ultrastar_audio_input_path, (title, artist, None, None)
         # return basename_without_ext, song_output, ultrastar_audio_input_path, (title, artist, year_info, genre_info)
