@@ -426,21 +426,12 @@ class UltraSinger:
 
         # 변경
         # ultrastar_note_numbers 중 최대음을 찾는다.
-        max_note = librosa.midi_to_note(max_ultrastar_note + 48)
-        print(f"max_note: {max_note}")
+        max_midi_note = max_ultrastar_note + 48
+        print(f"max_midi_note: {max_midi_note}")
 
-        # max_note를 txt로 출력한다.
+        # max_midi_note를 txt로 출력한다.
         with open(os.path.join(song_output, "max_note.txt"), "w", encoding=FILE_ENCODING) as f:
-            f.write(max_note)
-
-        # # 변경
-        # # midi_notes의 최대값을 note로 변환하여 출력한다.
-        # print(max(midi_notes))
-        #
-        # # 변경
-        # # ultrastar_note_numbers의 최대값을 note로 변환하여 출력한다.
-        # print(max(ultrastar_note_numbers) + 48)
-        # print(librosa.midi_to_note(max(ultrastar_note_numbers) + 48))
+            f.write(str(max_midi_note))
 
         # Create plot
         if self.settings.create_plot:

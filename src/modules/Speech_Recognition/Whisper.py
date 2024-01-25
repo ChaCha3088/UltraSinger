@@ -114,5 +114,10 @@ def convert_to_transcribed_data(result_aligned):
                     msg = f'Error: There is no timestamp for word: "{obj["word"]}". ' \
                           f'Fixing it by placing it after the previous word: "{previous.word}". At start: {vtd.start} end: {vtd.end}. Fix it manually!'
                     print(f"{red_highlighted(msg)}")
+                else:
+                    vtd.start = 0
+                    vtd.end = 0.1
+
             transcribed_data.append(vtd)  # and add it to list
+
     return transcribed_data
