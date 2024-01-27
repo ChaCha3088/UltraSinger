@@ -25,7 +25,7 @@ setup(
         'PyHyphen~=4.0.3',
         'python_Levenshtein~=0.21.1',
         'scipy~=1.11.2',
-        'tensorflow<2.11',
+        'tensorflow==2.13',
         'tqdm~=4.65.2',
         'whisperx~=3.1.1',
         'yt_dlp~=2023.9.24',
