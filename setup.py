@@ -30,13 +30,12 @@ setup(
         'tqdm~=4.65.2',
         'whisperx~=3.1.1',
         'yt_dlp~=2023.9.24',
-
         'isort~=5.12',
         'black~=23.3',
         'pylint~=2.17',
         'pytest~=7.3.1',
         'protobuf==3.20.*',
-        'packaging~=23.2',
+        'packaging~=23.2'
     ]
 )
 
