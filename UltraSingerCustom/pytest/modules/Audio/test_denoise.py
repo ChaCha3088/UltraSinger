@@ -2,7 +2,7 @@
 
 import os
 import unittest
-from UltraSingerScore.src.modules.Audio.denoise import ffmpeg_reduce_noise
+from UltraSingerCustom.src.modules.Audio.denoise import ffmpeg_reduce_noise
 import pytest
 
 

@@ -2,9 +2,9 @@
 
 import os
 import unittest
-import UltraSingerScore.src.modules.Pitcher.pitcher as test_subject
+import UltraSingerCustom.src.modules.Pitcher.pitcher as test_subject
 import pytest
-from UltraSingerScore.src.modules.plot import plot
+from UltraSingerCustom.src.modules.plot import plot
 
 
 class PitcherTest(unittest.TestCase):

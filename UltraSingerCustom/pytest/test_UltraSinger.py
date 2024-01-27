@@ -1,8 +1,8 @@
 """Tests for UltraSinger.py"""
 
 import unittest
-from UltraSingerScore.src.UltraSinger import format_separated_string
-from UltraSingerScore.src.UltraSinger import extract_year
+from UltraSingerCustom.src.UltraSinger import format_separated_string
+from UltraSingerCustom.src.UltraSinger import extract_year
 
 class TestUltraSinger(unittest.TestCase):
     def test_format_separated_string(self):

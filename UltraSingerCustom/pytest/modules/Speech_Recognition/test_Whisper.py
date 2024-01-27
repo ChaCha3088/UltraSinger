@@ -1,8 +1,8 @@
 """Tests for whisper.py"""
 
 import unittest
-from UltraSingerScore.src.modules.Speech_Recognition.TranscribedData import TranscribedData
-from UltraSingerScore.src.modules.Speech_Recognition.Whisper import convert_to_transcribed_data
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.Speech_Recognition.Whisper import convert_to_transcribed_data
 
 
 class ConvertToTranscribedDataTest(unittest.TestCase):

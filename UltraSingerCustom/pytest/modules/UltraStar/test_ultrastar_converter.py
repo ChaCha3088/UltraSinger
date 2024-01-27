@@ -1,6 +1,6 @@
 """Tests for ultrastar_converter.py"""
 
-from UltraSingerScore.src.modules.Ultrastar.ultrastar_converter import real_bpm_to_ultrastar_bpm
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_converter import real_bpm_to_ultrastar_bpm
 
 
 def test_real_bpm_to_ultrastar_bpm():

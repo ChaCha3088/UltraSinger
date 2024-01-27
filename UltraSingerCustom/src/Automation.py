@@ -1,7 +1,7 @@
 import os
 
-from UltraSingerScore.src.UltraSinger import UltraSinger
-from UltraSingerScore.src.BatchSettings import BatchSettings
+from UltraSingerCustom.src.UltraSinger import UltraSinger
+from UltraSingerCustom.src.BatchSettings import BatchSettings
 
 # 1. 파일명 리스트를 입력받는다.
 input_file_list = os.listdir("../youtubeFile")

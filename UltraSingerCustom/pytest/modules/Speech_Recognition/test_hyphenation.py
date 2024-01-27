@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import patch
-from UltraSingerScore.src.modules.Speech_Recognition.hyphenation import hyphenation, language_check
+from UltraSingerCustom.src.modules.Speech_Recognition.hyphenation import hyphenation, language_check
 from hyphen import Hyphenator
 
 class TestHypenation(unittest.TestCase):

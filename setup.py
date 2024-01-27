@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='UltraSingerScore',
+    name='UltraSingerCustom',
     version='1.0.1',
-    description='Ultra Singer Score',
+    description='Ultra Singer Custom',
     url='https://github.com/ChaCha3088/UltraSinger',
     author='ChaCha3088',
     author_email='cha3088@gmail.com',

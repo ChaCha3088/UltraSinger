@@ -1,0 +1,2 @@
+from UltraSingerCustom.src.UltraSinger import UltraSinger
+from UltraSingerCustom.src.ScoreSettings import ScoreSettings

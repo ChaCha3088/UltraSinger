@@ -1,7 +1,7 @@
 """Tests for silence_processing.py"""
 
 import unittest
-from UltraSingerScore.src.modules.Audio.silence_processing import remove_silence
+from UltraSingerCustom.src.modules.Audio.silence_processing import remove_silence
 from modules.Speech_Recognition.TranscribedData import TranscribedData
 
 

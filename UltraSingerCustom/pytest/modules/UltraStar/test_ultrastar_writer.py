@@ -3,9 +3,9 @@
 import unittest
 from packaging import version
 from unittest.mock import patch, mock_open
-from UltraSingerScore.src.modules.Ultrastar.ultrastar_writer import create_ultrastar_txt_from_automation
-from UltraSingerScore.src.modules.Speech_Recognition.TranscribedData import TranscribedData
-from UltraSingerScore.src.modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, UltrastarTxtTag
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_writer import create_ultrastar_txt_from_automation
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, UltrastarTxtTag
 
 
 class TestCreateUltrastarTxt(unittest.TestCase):
