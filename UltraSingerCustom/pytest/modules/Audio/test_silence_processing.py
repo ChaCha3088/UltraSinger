@@ -2,7 +2,7 @@
 
 import unittest
 from UltraSingerCustom.src.modules.Audio.silence_processing import remove_silence
-from modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
 
 
 class SilenceProcessingTest(unittest.TestCase):

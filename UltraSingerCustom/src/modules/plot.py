@@ -8,10 +8,10 @@ import numpy
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle
 
-from modules.console_colors import ULTRASINGER_HEAD
-from modules.Pitcher.pitched_data import PitchedData
-from modules.Pitcher.pitcher import get_pitched_data_with_high_confidence
-from modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD
+from UltraSingerCustom.src.modules.Pitcher.pitched_data import PitchedData
+from UltraSingerCustom.src.modules.Pitcher.pitcher import get_pitched_data_with_high_confidence
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
 
 @dataclass
 class PlottedNote:

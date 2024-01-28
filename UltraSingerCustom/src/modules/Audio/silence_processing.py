@@ -2,8 +2,8 @@
 
 from pydub import AudioSegment, silence
 
-from modules.console_colors import ULTRASINGER_HEAD
-from modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
 
 def remove_silence_from_transcription_data(audio_path: str, transcribed_data: list[TranscribedData]) -> list[
     TranscribedData]:

@@ -4,15 +4,15 @@ import re
 from packaging import version
 import langcodes
 
-from modules.console_colors import ULTRASINGER_HEAD
-from modules.Ultrastar.ultrastar_converter import (
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_converter import (
     real_bpm_to_ultrastar_bpm,
     second_to_beat,
 )
-from modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, UltrastarTxtTag, UltrastarTxtNoteTypeTag, \
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, UltrastarTxtTag, UltrastarTxtNoteTypeTag, \
     FILE_ENCODING
-from modules.Speech_Recognition.TranscribedData import TranscribedData
-from modules.Ultrastar.ultrastar_score_calculator import Score
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_score_calculator import Score
 
 def get_sixteenth_note_second(real_bpm: float):
     """Converts a beat to a 1/16 note in second"""

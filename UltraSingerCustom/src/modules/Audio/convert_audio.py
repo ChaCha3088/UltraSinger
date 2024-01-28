@@ -4,7 +4,7 @@ from pydub import AudioSegment
 import librosa
 import soundfile as sf
 
-from modules.console_colors import ULTRASINGER_HEAD
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD
 
 
 def convert_audio_to_mono_wav(input_file_path: str, output_file_path: str) -> None:

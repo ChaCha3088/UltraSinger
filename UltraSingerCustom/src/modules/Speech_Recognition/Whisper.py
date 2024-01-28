@@ -5,8 +5,8 @@ import sys
 import whisperx
 from torch.cuda import OutOfMemoryError
 
-from modules.console_colors import ULTRASINGER_HEAD, blue_highlighted, red_highlighted
-from modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD, blue_highlighted, red_highlighted
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
 
 
 def transcribe_with_whisper(

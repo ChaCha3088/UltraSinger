@@ -4,8 +4,8 @@ import crepe
 import librosa
 from scipy.io import wavfile
 
-from modules.console_colors import ULTRASINGER_HEAD, blue_highlighted, red_highlighted
-from modules.Pitcher.pitched_data import PitchedData
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD, blue_highlighted, red_highlighted
+from UltraSingerCustom.src.modules.Pitcher.pitched_data import PitchedData
 
 
 def get_pitch_with_crepe_file(

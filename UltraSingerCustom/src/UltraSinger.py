@@ -15,51 +15,51 @@ from packaging import version
 
 import soundfile as sf
 
-from modules import os_helper
-from modules.Audio.denoise import ffmpeg_reduce_noise
-from modules.Audio.separation import separate_audio
-from modules.Audio.vocal_chunks import (
+from UltraSingerCustom.src.modules import os_helper
+from UltraSingerCustom.src.modules.Audio.denoise import ffmpeg_reduce_noise
+from UltraSingerCustom.src.modules.Audio.separation import separate_audio
+from UltraSingerCustom.src.modules.Audio.vocal_chunks import (
     export_chunks_from_transcribed_data,
     export_chunks_from_ultrastar_data,
 )
-from modules.Audio.silence_processing import remove_silence_from_transcription_data, get_silence_sections
-from modules.csv_handler import export_transcribed_data_to_csv
-from modules.Audio.convert_audio import convert_audio_to_mono_wav, convert_wav_to_mp3
-from modules.Audio.youtube import (
+from UltraSingerCustom.src.modules.Audio.silence_processing import remove_silence_from_transcription_data, get_silence_sections
+from UltraSingerCustom.src.modules.csv_handler import export_transcribed_data_to_csv
+from UltraSingerCustom.src.modules.Audio.convert_audio import convert_audio_to_mono_wav, convert_wav_to_mp3
+from UltraSingerCustom.src.modules.Audio.youtube import (
     download_youtube_audio,
     download_youtube_thumbnail,
     download_youtube_video,
     get_youtube_title,
 )
-from modules.DeviceDetection.device_detection import check_gpu_support
-from modules.console_colors import (
+from UltraSingerCustom.src.modules.DeviceDetection.device_detection import check_gpu_support
+from UltraSingerCustom.src.modules.console_colors import (
     ULTRASINGER_HEAD,
     blue_highlighted,
     gold_highlighted,
     light_blue_highlighted,
     red_highlighted,
 )
-from modules.Midi import midi_creator
-from modules.Midi.midi_creator import (
+from UltraSingerCustom.src.modules.Midi import midi_creator
+from UltraSingerCustom.src.modules.Midi.midi_creator import (
     convert_frequencies_to_notes,
     create_midi_notes_from_pitched_data,
     most_frequent,
 )
-from modules.Pitcher.pitcher import (
+from UltraSingerCustom.src.modules.Pitcher.pitcher import (
     get_frequencies_with_high_confidence,
     get_pitch_with_crepe_file, get_highest_note_with_high_confidence,
 )
-from modules.Pitcher.pitched_data import PitchedData
-from modules.Speech_Recognition.hyphenation import hyphenation, language_check, create_hyphenator
-from modules.Speech_Recognition.Whisper import transcribe_with_whisper
-from modules.Ultrastar import ultrastar_score_calculator, ultrastar_writer, ultrastar_converter, ultrastar_parser
-from modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, FILE_ENCODING
+from UltraSingerCustom.src.modules.Pitcher.pitched_data import PitchedData
+from UltraSingerCustom.src.modules.Speech_Recognition.hyphenation import hyphenation, language_check, create_hyphenator
+from UltraSingerCustom.src.modules.Speech_Recognition.Whisper import transcribe_with_whisper
+from UltraSingerCustom.src.modules.Ultrastar import ultrastar_score_calculator, ultrastar_writer, ultrastar_converter, ultrastar_parser
+from UltraSingerCustom.src.modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, FILE_ENCODING
 from Settings import Settings
-from modules.Speech_Recognition.TranscribedData import TranscribedData
-from modules.plot import plot, plot_spectrogram
-from modules.musicbrainz_client import get_music_infos
+from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
+from UltraSingerCustom.src.modules.plot import plot, plot_spectrogram
+from UltraSingerCustom.src.modules.musicbrainz_client import get_music_infos
 
-from modules.csv_handler import write_lists_to_csv
+from UltraSingerCustom.src.modules.csv_handler import write_lists_to_csv
 
 
 class UltraSinger:

@@ -4,7 +4,7 @@ import torch
 import os
 import tensorflow as tf
 
-from modules.console_colors import ULTRASINGER_HEAD, red_highlighted, blue_highlighted
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD, red_highlighted, blue_highlighted
 
 tensorflow_gpu_supported = False
 pytorch_gpu_supported = False

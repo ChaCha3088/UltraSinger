@@ -2,7 +2,7 @@ import atexit
 from functools import reduce
 from time import process_time
 
-from modules.console_colors import ULTRASINGER_HEAD
+from UltraSingerCustom.src.modules.console_colors import ULTRASINGER_HEAD
 
 
 def seconds_to_str(t):
