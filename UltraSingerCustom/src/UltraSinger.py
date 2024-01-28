@@ -108,9 +108,6 @@ class UltraSinger:
                 pitched_data.frequencies, pitched_data.confidence
             )
 
-            # pitched_data와 conf_f에 들어있는 값을 csv로 출력한다.
-            write_lists_to_csv(pitched_data.times, conf_f, pitched_data.confidence, filepath.replace(".wav", ".csv"))
-
             notes = convert_frequencies_to_notes(conf_f)
             note = most_frequent(notes)[0][0]
 
@@ -186,30 +183,30 @@ class UltraSinger:
         """Print help text"""
         help_string = """
         UltraSinger.py [opt] [mode] [transcription] [pitcher] [extra]
-        
+
         [opt]
         -h      This help text.
         -i      Ultrastar.txt
                 audio like .mp3, .wav, youtube link
         -o      Output folder
-        
+
         [mode]
         ## INPUT is audio ##
         default  Creates all
-        
+
         # Single file creation selection is in progress, you currently getting all!
         (-u      Create ultrastar txt file) # In Progress
         (-m      Create midi file) # In Progress
         (-s      Create sheet file) # In Progress
-        
+
         ## INPUT is ultrastar.txt ##
         default  Creates all
-    
+
         # Single selection is in progress, you currently getting all!
         (-r      repitch Ultrastar.txt (input has to be audio)) # In Progress
         (-p      Check pitch of Ultrastar.txt input) # In Progress
         (-m      Create midi file) # In Progress
-    
+
         [transcription]
         # Default is whisper
         --whisper               Multilingual model > tiny|base|small|medium|large-v1|large-v2  >> ((default) is large-v2
@@ -218,12 +215,12 @@ class UltraSinger:
         --language              Override the language detected by whisper, does not affect transcription but steps after transcription
         --whisper_batch_size    Reduce if low on GPU mem >> ((default) is 16)
         --whisper_compute_type  Change to "int8" if low on GPU mem (may reduce accuracy) >> ((default) is "float16" for cuda devices, "int8" for cpu)
-        
+
         [pitcher]
         # Default is crepe
         --crepe            tiny|full >> ((default) is full)
         --crepe_step_size  unit is miliseconds >> ((default) is 10)
-        
+
         [extra]
         --hyphenation           True|False >> ((default) is True)
         --disable_separation    True|False >> ((default) is False)
@@ -231,7 +228,7 @@ class UltraSinger:
         --create_audio_chunks   True|False >> ((default) is False)
         --plot                  True|False >> ((default) is False)
         --format_version        0.3.0|1.0.0|1.1.0 >> ((default) is 1.0.0)
-        
+
         [device]
         --force_cpu             True|False >> ((default) is False)  All steps will be forced to cpu
         --force_whisper_cpu     True|False >> ((default) is False)  Only whisper will be forced to cpu
@@ -297,7 +294,7 @@ class UltraSinger:
             f"{ULTRASINGER_HEAD} {gold_highlighted('*****************************')}"
         )
 
-    def analyze(self) -> None:
+    def analyze(self) -> int:
         """The processing function of this program"""
         is_audio = ".txt" not in self.settings.input_file_path
         ultrastar_class = None
@@ -315,6 +312,9 @@ class UltraSinger:
                 ultrastar_audio_input_path,
                 ultrastar_class,
             ) = self.parse_ultrastar_txt()
+
+            ultrastar_audio_input_path = self.settings.input_audio_file_path
+
         elif self.settings.input_file_path.startswith("https:"):  # Youtube
             print(
                 f"{ULTRASINGER_HEAD} {gold_highlighted('full automatic mode')}"
@@ -460,14 +460,23 @@ class UltraSinger:
             )
 
         # Calc Points
-        ultrastar_class, simple_score, accurate_score = self.calculate_score_points(
+        ultrastar_class, simple_score, accurate_score, original_accurate_score = self.calculate_score_points(
             is_audio, pitched_data, ultrastar_class, ultrastar_file_output
         )
 
         # Add calculated score to Ultrastar txt #Todo: Missing Karaoke
         ultrastar_writer.add_score_to_ultrastar_txt(
-            ultrastar_file_output, simple_score
+            ultrastar_file_output, accurate_score
         )
+
+        final_score = accurate_score.score / accurate_score.max_score * 100 if accurate_score.max_score != 0 else 0
+
+        # 소수 첫번째 자리에서 반올림
+        final_score = round(final_score, 1)
+        print(f'max_score: {accurate_score.max_score}')
+        print(f'final_score: {final_score}')
+
+        return final_score
 
     def run(self) -> None:
         """The processing function of this program"""
@@ -745,6 +754,9 @@ class UltraSinger:
             ultrastar_score_calculator.print_score_calculation(
                 simple_score, accurate_score
             )
+
+            original_accurate_score = accurate_score
+
             print(
                 f"{ULTRASINGER_HEAD} {blue_highlighted('Score of re-pitched Ultrastar txt')}"
             )
@@ -760,14 +772,15 @@ class UltraSinger:
             ultrastar_score_calculator.print_score_calculation(
                 simple_score, accurate_score
             )
-        return ultrastar_class, simple_score, accurate_score
+
+        return ultrastar_class, simple_score, accurate_score, original_accurate_score
 
     def create_ultrastar_txt_from_ultrastar_data(
             self, song_output: str, ultrastar_class: UltrastarTxtValue, ultrastar_note_numbers: list[int]
     ) -> str:
         """Create Ultrastar txt from Ultrastar data"""
         output_repitched_ultrastar = os.path.join(
-            song_output, ultrastar_class.title + ".txt"
+            song_output, ultrastar_class.artist + "-" + ultrastar_class.title + "_repiched" + ".txt"
         )
         ultrastar_writer.create_repitched_txt_from_ultrastar_data(
             self.settings.input_file_path,
@@ -967,7 +980,9 @@ class UltraSinger:
         ultrastar_audio_input_path = os.path.join(dirname, ultrastar_mp3_name)
         song_output = os.path.join(
             self.settings.output_file_path,
-            ultrastar_class.artist + " - " + ultrastar_class.title,
+            self.settings.id,
+            ultrastar_class.artist +
+            "-" + ultrastar_class.title,
         )
         song_output = self.get_unused_song_output_dir(song_output)
         os_helper.create_folder(song_output)

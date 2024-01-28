@@ -159,7 +159,7 @@ def create_repitched_txt_from_ultrastar_data(
     """Creates a repitched ultrastar txt file from the original one"""
     # todo: just add '_repitched' to input_file
     print(
-        "{PRINT_ULTRASTAR} Creating repitched ultrastar txt -> {input_file}_repitch.txt"
+        f"Creating repitched ultrastar txt -> {output_repitched_ultrastar}"
     )
 
     # todo: to reader
@@ -170,7 +170,7 @@ def create_repitched_txt_from_ultrastar_data(
     # todo: just add '_repitched' to input_file
     with open(output_repitched_ultrastar, "w", encoding=FILE_ENCODING) as file:
         for line in txt:
-            if line.startswith(f"#{UltrastarTxtNoteTypeTag.NORMAL} "):
+            if line.startswith(f"{UltrastarTxtNoteTypeTag.NORMAL} "):
                 parts = re.findall(r"\S+|\s+", line)
                 # between are whitespaces
                 # [0] :

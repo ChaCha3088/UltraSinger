@@ -1,5 +1,5 @@
 class ScoreSettings:
-    def __init__(self, input_file_path="", output_file_path=""):
+    def __init__(self, id="", input_file_path="", input_audio_file_path="", output_file_path=""):
         self.APP_VERSION = "0.0.8"
 
         self.create_midi = False
@@ -9,7 +9,9 @@ class ScoreSettings:
         self.use_separated_vocal = True
         self.create_karaoke = False
 
+        self.id = id
         self.input_file_path = input_file_path
+        self.input_audio_file_path = input_audio_file_path
         self.output_file_path = output_file_path
         self.processing_audio_path = ""
 
@@ -31,9 +33,12 @@ class ScoreSettings:
         self.crepe_model_capacity = "full"  # tiny|small|medium|large|full
         self.crepe_step_size = 10 # in miliseconds
 
+        # 변경
         # Device
-        self.pytorch_device = 'cuda'  # cpu|cuda
-        self.tensorflow_device = 'cuda'  # cpu|cuda
-        self.force_cpu = False
-        self.force_whisper_cpu = False
-        self.force_crepe_cpu = False
+        self.pytorch_device = 'cpu'  # cpu|cuda
+        self.tensorflow_device = 'cpu'  # cpu|cuda
+
+        # 변경
+        self.force_cpu = True
+        self.force_whisper_cpu = True
+        self.force_crepe_cpu = True
