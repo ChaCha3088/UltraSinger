@@ -54,7 +54,6 @@ from UltraSingerCustom.src.modules.Speech_Recognition.hyphenation import hyphena
 from UltraSingerCustom.src.modules.Speech_Recognition.Whisper import transcribe_with_whisper
 from UltraSingerCustom.src.modules.Ultrastar import ultrastar_score_calculator, ultrastar_writer, ultrastar_converter, ultrastar_parser
 from UltraSingerCustom.src.modules.Ultrastar.ultrastar_txt import UltrastarTxtValue, FILE_ENCODING
-from Settings import Settings
 from UltraSingerCustom.src.modules.Speech_Recognition.TranscribedData import TranscribedData
 from UltraSingerCustom.src.modules.plot import plot, plot_spectrogram
 from UltraSingerCustom.src.modules.musicbrainz_client import get_music_infos
