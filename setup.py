@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='UltraSingerCustom',
-    version='1.0.2',
+    version='1.0.3',
     description='Ultra Singer Custom',
     url='https://github.com/ChaCha3088/UltraSinger',
     author='ChaCha3088',
