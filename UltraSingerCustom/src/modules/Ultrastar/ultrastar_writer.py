@@ -196,7 +196,7 @@ def add_score_to_ultrastar_txt(ultrastar_file_output: str, score: Score) -> None
         if line.startswith(f"#{UltrastarTxtTag.COMMENT}:"):
             text[
                 i
-            ] = f"{line} | Score: total: {score.score}, notes: {score.notes} line: {score.line_bonus}, golden: {score.golden}"
+            ] = f"{line} | Score: total: {score.score}, notes: {score.notes}"
             break
 
         if line.startswith((
@@ -207,7 +207,7 @@ def add_score_to_ultrastar_txt(ultrastar_file_output: str, score: Score) -> None
                 f"{UltrastarTxtNoteTypeTag.RAP_GOLDEN} ")):
             text.insert(
                 i,
-                f"#{UltrastarTxtTag.COMMENT}: UltraSinger [GitHub] | Score: total: {score.score}, notes: {score.notes} line: {score.line_bonus}, golden: {score.golden}",
+                f"#{UltrastarTxtTag.COMMENT}: UltraSinger [GitHub] | Score: total: {score.score}, notes: {score.notes}",
             )
             break
 

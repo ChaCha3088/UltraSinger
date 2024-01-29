@@ -7,7 +7,7 @@
 #BPM:394.78
 #GAP:14874
 #CREATOR:UltraSinger [GitHub] 0.0.8
-#COMMENT:UltraSinger [GitHub] 0.0.8 | Score: total: 2617, notes: 2494 line: 123, golden: 0
+#COMMENT:UltraSinger [GitHub] 0.0.8 | Score: total: 21.5, notes: 250
 : 0 28 10 너 
 : 29 11 16 없는 
 - 40
@@ -107,7 +107,7 @@
 : 2986 5 16 차라리 
 - 2992
 : 3008 50 11 알코나면 
-: 3061 43 25 그만인데 
+: 3061 43 26 그만인데 
 - 3104
 : 3184 36 20 가시처럼 
 - 3220

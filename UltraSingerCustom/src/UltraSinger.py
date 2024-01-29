@@ -459,7 +459,7 @@ class UltraSinger:
             )
 
         # Calc Points
-        ultrastar_class, simple_score, accurate_score, original_accurate_score = self.calculate_score_points(
+        ultrastar_class, accurate_score = self.calculate_score_points(
             is_audio, pitched_data, ultrastar_class, ultrastar_file_output
         )
 
@@ -468,14 +468,10 @@ class UltraSinger:
             ultrastar_file_output, accurate_score
         )
 
-        final_score = accurate_score.score / accurate_score.max_score * 100 if accurate_score.max_score != 0 else 0
-
-        # 소수 첫번째 자리에서 반올림
-        final_score = round(final_score, 1)
         print(f'max_score: {accurate_score.max_score}')
-        print(f'final_score: {final_score}')
+        print(f'final_score: {accurate_score.score}')
 
-        return final_score
+        return accurate_score.score
 
     def run(self) -> None:
         """The processing function of this program"""
@@ -742,37 +738,16 @@ class UltraSinger:
             )
         else:
             print(
-                f"{ULTRASINGER_HEAD} {blue_highlighted('Score of original Ultrastar txt')}"
+                f"{ULTRASINGER_HEAD} {blue_highlighted('Original Ultrastar txt와 비교합니다.')}"
             )
-            (
-                simple_score,
-                accurate_score,
-            ) = ultrastar_score_calculator.calculate_score(
+            accurate_score = ultrastar_score_calculator.calculate_score(
                 pitched_data, ultrastar_class
             )
             ultrastar_score_calculator.print_score_calculation(
-                simple_score, accurate_score
+                accurate_score
             )
 
-            original_accurate_score = accurate_score
-
-            print(
-                f"{ULTRASINGER_HEAD} {blue_highlighted('Score of re-pitched Ultrastar txt')}"
-            )
-            ultrastar_class = ultrastar_parser.parse_ultrastar_txt(
-                ultrastar_file_output
-            )
-            (
-                simple_score,
-                accurate_score,
-            ) = ultrastar_score_calculator.calculate_score(
-                pitched_data, ultrastar_class
-            )
-            ultrastar_score_calculator.print_score_calculation(
-                simple_score, accurate_score
-            )
-
-        return ultrastar_class, simple_score, accurate_score, original_accurate_score
+        return ultrastar_class, accurate_score
 
     def create_ultrastar_txt_from_ultrastar_data(
             self, song_output: str, ultrastar_class: UltrastarTxtValue, ultrastar_note_numbers: list[int]
@@ -1031,7 +1006,7 @@ class UltraSinger:
         )
 
         # pitched_data에 들어있는 값을 csv로 출력한다.
-        write_lists_to_csv(pitched_data.times, pitched_data.frequencies, pitched_data.confidence, filepath)
+        # write_lists_to_csv(pitched_data.times, pitched_data.frequencies, pitched_data.confidence, filepath)
 
         if is_audio:
             start_times = []

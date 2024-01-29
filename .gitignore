@@ -16,6 +16,7 @@ test_output
 # default output folder
 output
 src/result
+src/output
 
 # youtubeFile
 youtubeFile

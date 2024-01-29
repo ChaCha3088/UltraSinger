@@ -35,10 +35,10 @@ class ScoreSettings:
 
         # 변경
         # Device
-        self.pytorch_device = 'cpu'  # cpu|cuda
-        self.tensorflow_device = 'cpu'  # cpu|cuda
+        self.pytorch_device = 'cuda'  # cpu|cuda
+        self.tensorflow_device = 'cuda'  # cpu|cuda
 
         # 변경
-        self.force_cpu = True
-        self.force_whisper_cpu = True
-        self.force_crepe_cpu = True
+        self.force_cpu = False
+        self.force_whisper_cpu = False
+        self.force_crepe_cpu = False

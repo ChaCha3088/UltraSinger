@@ -62,17 +62,11 @@ def get_score(points: Points) -> Score:
     """Score calculation."""
 
     score = Score()
-    score.max_score = (
-        MAX_SONG_SCORE
-        if points.line_bonus == 0
-        else MAX_SONG_SCORE - MAX_SONG_LINE_BONUS
-    )
-    score.notes = round(
-        score.max_score * (points.notes + points.rap) / points.parts
-    )
-    score.golden = round(points.golden_notes + points.golden_rap)
-    score.score = round(score.notes + points.line_bonus + score.golden)
-    score.line_bonus = round(points.line_bonus)
+    score.max_score = points.parts
+    score.notes = points.notes
+
+    # notes / max_score를 소수 첫번째 자리에서 반올림
+    score.score = round(score.notes / score.max_score * 100, 1)
     return score
 
 
@@ -112,12 +106,12 @@ def calculate_score(pitched_data: PitchedData, ultrastar_class: UltrastarTxtValu
         parts = 1 if parts == 0 else parts
 
         accurate_part_line_bonus_points = 0
-        simple_part_line_bonus_points = 0
 
         ultrastar_midi_note = ultrastar_note_to_midi_note(
             int(ultrastar_class.pitches[pos])
         )
-        ultrastar_note = librosa.midi_to_note(ultrastar_midi_note)
+
+        accurate_points.parts += parts
 
         for part in range(parts):
             start = start_time + step_size * part
@@ -128,39 +122,22 @@ def calculate_score(pitched_data: PitchedData, ultrastar_class: UltrastarTxtValu
                 start, end, pitched_data
             )
 
-            if pitch_note[:-1] == ultrastar_note[:-1]:
-                # Ignore octave high
-                simple_points = add_point(
-                    ultrastar_class.noteType[pos], simple_points
-                )
-                simple_part_line_bonus_points += 1
+            midi_note = librosa.note_to_midi(pitch_note)
 
-            if pitch_note == ultrastar_note:
-                # Octave high must be the same
+            # 키 한개 차이는 okay!
+            if abs(midi_note - ultrastar_midi_note) <= 1:
                 accurate_points = add_point(
                     ultrastar_class.noteType[pos], accurate_points
                 )
-                accurate_part_line_bonus_points += 1
-
-            accurate_points.parts += 1
-            simple_points.parts += 1
 
         if accurate_part_line_bonus_points >= parts:
             accurate_points.line_bonus += reachable_line_bonus_per_word
 
-        if simple_part_line_bonus_points >= parts:
-            simple_points.line_bonus += reachable_line_bonus_per_word
-
-    return get_score(simple_points), get_score(accurate_points)
+    return get_score(accurate_points)
 
 
-def print_score_calculation(simple_points: Score, accurate_points: Score) -> None:
+def print_score_calculation(accurate_points: Score) -> None:
     """Print score calculation."""
-
-    print(
-        f"{ULTRASINGER_HEAD} {underlined('Simple (octave high ignored)')} points"
-    )
-    print_score(simple_points)
 
     print(
         f"{ULTRASINGER_HEAD} {underlined('Accurate (octave high matches)')} points:"
