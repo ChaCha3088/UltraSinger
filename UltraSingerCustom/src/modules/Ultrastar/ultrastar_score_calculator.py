@@ -83,7 +83,6 @@ def calculate_score(pitched_data: PitchedData, ultrastar_class: UltrastarTxtValu
 
     print(ULTRASINGER_HEAD + " Calculating Ultrastar Points")
 
-    simple_points = Points()
     accurate_points = Points()
 
     reachable_line_bonus_per_word = MAX_SONG_LINE_BONUS / len(
