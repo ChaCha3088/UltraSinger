@@ -310,6 +310,7 @@ class UltraSinger:
                 song_output,
                 ultrastar_audio_input_path,
                 ultrastar_class,
+                # 주목 ultrastar_txt를 파싱합니다!
             ) = self.parse_ultrastar_txt()
 
             ultrastar_audio_input_path = self.settings.input_audio_file_path
@@ -942,6 +943,8 @@ class UltraSinger:
 
     def parse_ultrastar_txt(self) -> tuple[str, float, str, str, UltrastarTxtValue]:
         """Parse Ultrastar txt"""
+
+        # 주목 ultrastar_parser가 파싱을 시작합니다.
         ultrastar_class = ultrastar_parser.parse_ultrastar_txt(
             self.settings.input_file_path
         )

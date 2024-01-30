@@ -52,6 +52,8 @@ def get_start_time_from_ultrastar(ultrastar_class: UltrastarTxtValue, pos: int) 
     """Calculates the start time from the Ultrastar txt"""
 
     gap = int(ultrastar_class.gap) / 1000
+
+    # 주목 UltraStar BPM을 실제 BPM으로 변환합니다.
     real_bpm = ultrastar_bpm_to_real_bpm(
         float(ultrastar_class.bpm.replace(",", "."))
     )
@@ -65,6 +67,8 @@ def get_end_time_from_ultrastar(ultrastar_class: UltrastarTxtValue, pos: int) ->
     """Calculates the end time from the Ultrastar txt"""
 
     gap = int(ultrastar_class.gap) / 1000
+
+    # 주목 UltraStar BPM을 실제 BPM으로 변환합니다.
     real_bpm = ultrastar_bpm_to_real_bpm(
         float(ultrastar_class.bpm.replace(",", "."))
     )
