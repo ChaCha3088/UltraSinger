@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='UltraSingerCustom',
-    version='1.0.3',
+    version='1.0.4',
     description='Ultra Singer Custom',
     url='https://github.com/ChaCha3088/UltraSinger',
     author='ChaCha3088',
@@ -25,7 +25,7 @@ setup(
         'PyHyphen~=4.0.3',
         'python_Levenshtein~=0.21.1',
         'scipy~=1.11.2',
-        'tensorflow==2.13',
+        'tensorflow==2.9.0',
         'tqdm~=4.65.2',
         'whisperx~=3.1.1',
         'yt_dlp~=2023.9.24',
